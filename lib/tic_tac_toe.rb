@@ -3,27 +3,27 @@ class TicTacToe
     @board = board || Array.new(9," ")
   end
 
-  def display_board(board)
-  puts " "+board[0]+" "+"|"+" "+board[1]+" "+"|"+" "+board[2]+" "
+  def display_board
+  puts " "+@board[0]+" "+"|"+" "+@board[1]+" "+"|"+" "+@board[2]+" "
   puts "-----------"
-  puts " "+board[3]+" "+"|"+" "+board[4]+" "+"|"+" "+board[5]+" "
+  puts " "+@board[3]+" "+"|"+" "+@board[4]+" "+"|"+" "+@board[5]+" "
   puts "-----------"
-  puts " "+board[6]+" "+"|"+" "+board[7]+" "+"|"+" "+board[8]+" "
+  puts " "+@board[6]+" "+"|"+" "+@board[7]+" "+"|"+" "+@board[8]+" "
 end
 
 
-def valid_move?(board,index)
+def valid_move?(index)
   result = false
-  if (index.to_i).between?(0,8) && (board[index] == " " || board[index] == "" || board[index] == nil)
+  if (index.to_i).between?(0,8) && (@board[index] == " " || @board[index] == "" || @board[index] == nil)
     result = true
   end
   result
 end
 
 
-def move(board, index, token)
+def move(index, token)
   #index = input_to_index(input)
-  board[index] = token
+  @board[index] = token
 end
 
 
@@ -32,28 +32,28 @@ def input_to_index(input)
 end
 
 
-def turn(board)
+def turn
   puts "Please enter 1-9:"
   input = gets.strip
   index = input_to_index(input)
-  if valid_move?(board,index)
-    move(board,index, current_player(board))
-    display_board(board)
+  if valid_move?(index)
+    move(index, current_player)
+    display_board
 
   else
-    turn(board)
+    turn
   end
 end
 
-def current_player(board)
-  turn = turn_count(board)
+def current_player
+  turn = turn_count
   result = (turn % 2 == 0 ? "X" : "O")
   result
 end
 
-def turn_count(board)
+def turn_count
   turns = 0
-  board.each do |space|
+  @board.each do |space|
     if space == "X" || space == "O"
       turns += 1
     end
@@ -62,8 +62,8 @@ def turn_count(board)
 end
 
 # Helper Method
-def position_taken?(board, index)
-  !(board[index].nil? || board[index] == " ")
+def position_taken?(index)
+  !(@board[index].nil? || @board[index] == " ")
 end
 
 # Define your WIN_COMBINATIONS constant
@@ -81,32 +81,32 @@ WIN_COMBINATIONS = [
 
 ]
 
-def won?(board)
+def won?
   WIN_COMBINATIONS.detect do |combos|
-    board[combos[0]] ==   board[combos[1]] &&
-    board[combos[1]] ==   board[combos[2]] &&
-    position_taken?(board, combos[0])
+    @board[combos[0]] ==   @board[combos[1]] &&
+    @board[combos[1]] ==   @board[combos[2]] &&
+    position_taken?(combos[0])
   end
 end
 
-def full?(board)
-  board.all? {|i| i == "X" || i == "O"}
+def full?
+  @board.all? {|i| i == "X" || i == "O"}
 end
 
-def draw?(board)
- full?(board) && !won?(board)
+def draw?
+ full? && !won?
 
 end
 
-def over?(board)
-  won?(board) || draw?(board)
+def over?
+  won? || draw?
 end
 
-def winner(board)
+def winner
   result = nil
-  if won?(board)
-    result = won?(board)
-    result = board[result[0]]
+  if won?
+    result = won?
+    result = @board[result[0]]
 
   end
   result
@@ -115,18 +115,18 @@ end
 
 
 
-def play(board)
-  while !over?(board)
-    turn(board)
-    draw?(board)
+def play
+  while !over?
+    turn
+    draw?
   end
 
-  if won?(board)
-    result = winner(board)
+  if won?
+    result = winner
     puts "Congratulations #{result}!"
-  elsif draw?(board)
+  elsif draw?
     puts "Cat's Game!"
   end
 end
-  
+
 end
